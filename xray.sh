@@ -95,3 +95,5 @@ cat <<EOF > ${XRAY_PATH}config.json
   }]
 }
 EOF
+echo "${XRAY_PATH}xray -c ${XRAY_PATH}config.json"
+echo "echo \"nohup ${XRAY_PATH}xray -c ${XRAY_PATH}config.json >${XRAY_PATH}xray.log 2>&1 &\" >> /etc/profile"
