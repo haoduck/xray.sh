@@ -70,9 +70,10 @@ else
     exit 1
 fi
 XRAY_FILE="Xray-linux-${MACHINE}.zip"
-XRAY_URL="https://github.com/XTLS/Xray-core/releases/latest/download/${XRAY_FILE}"
+XRAY_URL="https://github.com/XTLS/Xray-core/releases/latest/download/${XRAY_FILE}" && rm -f /tmp/${XRAY_FILE}
 XRAY_PATH="/usr/xray/"
 mkdir -p ${XRAY_PATH}
+down(){
 wget -O /tmp/${XRAY_FILE} ${XRAY_URL}
 unzip -o /tmp/${XRAY_FILE} "xray" "geoip.dat" "geosite.dat" -d ${XRAY_PATH}
 cat <<EOF > ${XRAY_PATH}config.json
@@ -181,3 +182,7 @@ cat <<EOF > ${XRAY_PATH}config.json
 EOF
 echo "${XRAY_PATH}xray -c ${XRAY_PATH}config.json"
 echo "echo \"nohup ${XRAY_PATH}xray -c ${XRAY_PATH}config.json >${XRAY_PATH}xray.log 2>&1 &\" >> /etc/profile"
+}
+if [[ ! -f ${XRAY_FILE} ]] || [[ ! -f ${XRAY_PATH}config.json ]];then
+    down
+fi
