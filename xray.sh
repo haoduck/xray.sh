@@ -76,108 +76,30 @@ mkdir -p ${XRAY_PATH}
 down(){
 wget -O /tmp/${XRAY_FILE} ${XRAY_URL}
 unzip -o /tmp/${XRAY_FILE} "xray" "geoip.dat" "geosite.dat" -d ${XRAY_PATH}
+if [[ -z ${PORT} ]];then
+    PORT=8080
+fi
 cat <<EOF > ${XRAY_PATH}config.json
 {
-  "log": null,
-  "routing": {
-    "rules": [
-      {
-        "inboundTag": [
-          "api"
-        ],
-        "outboundTag": "api",
-        "type": "field"
-      },
-      {
-        "ip": [
-          "geoip:private"
-        ],
-        "outboundTag": "blocked",
-        "type": "field"
-      },
-      {
-        "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ],
-        "type": "field"
-      }
-    ]
-  },
-  "dns": null,
-  "inbounds": [
-    {
-      "listen": "127.0.0.1",
-      "port": 62789,
-      "protocol": "dokodemo-door",
-      "settings": {
-        "address": "127.0.0.1"
-      },
-      "streamSettings": null,
-      "tag": "api",
-      "sniffing": null
-    },
-    {
-      "listen": null,
-      "port": 47405,
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "15485d16-ec12-4dcf-d023-d7b16fb4a905",
-            "alterId": 0
-          }
-        ],
-        "disableInsecureEncryption": false
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
+    "inbounds": [{
+        "port": ${PORT},
+        "protocol": "vmess",
+        "settings": {
+            "clients": [{
+                "id": "8c35bef3-d51f-41ab-ac87-7b053410495b",
+                "alterId": 64
+            }]
+        },
+        "streamSettings": {
+            "network": "ws",
+            "wsSettings": {
+                "path": "/"
+            }
         }
-      },
-      "tag": "inbound-47405",
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {}
-    },
-    {
-      "protocol": "blackhole",
-      "settings": {},
-      "tag": "blocked"
-    }
-  ],
-  "transport": null,
-  "policy": {
-    "system": {
-      "statsInboundDownlink": true,
-      "statsInboundUplink": true
-    }
-  },
-  "api": {
-    "services": [
-      "HandlerService",
-      "LoggerService",
-      "StatsService"
-    ],
-    "tag": "api"
-  },
-  "stats": {},
-  "reverse": null,
-  "fakeDns": null
+    }],
+    "outbounds": [{
+        "protocol": "freedom"
+    }]
 }
 EOF
 echo "${XRAY_PATH}xray -c ${XRAY_PATH}config.json"
