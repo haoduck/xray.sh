@@ -1,18 +1,18 @@
 #!/bin/bash
-echo -e "Install [Yes/No](Default: Yes): \c"
-read install
-case install in
-    'No' | 'NO' | 'no' | 'N' | 'n')
-    echo "Exit"
-    exit 0
-    ;;
-    'Yes' | 'YES' | 'yes' | 'Y' | 'y')
-    echo "Install"
-    ;;
-    *)
-    echo "Install"
-    ;;
-esac
+# echo -e "Install [Yes/No](Default: Yes): \c"
+# read install
+# case install in
+#     'No' | 'NO' | 'no' | 'N' | 'n')
+#     echo "Exit"
+#     exit 0
+#     ;;
+#     'Yes' | 'YES' | 'yes' | 'Y' | 'y')
+#     echo "Install"
+#     ;;
+#     *)
+#     echo "Install"
+#     ;;
+# esac
 
 if [[ "$(uname)" == 'Linux' ]]; then
     case "$(uname -m)" in
